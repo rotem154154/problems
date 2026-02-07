@@ -1,5 +1,5 @@
 ---
-slug: "mse_loss"
+slug: "mse-loss"
 title: "Mean Squared Error Loss"
 difficulty: "EASY" 
 author: "harmya"
@@ -23,7 +23,7 @@ parameters:
   - name: "shape"
     type: "size_t"
     pointer: "true"
-    constant: "true"
+    const: "true"
 
   - name: "ndim"
     type: "size_t"

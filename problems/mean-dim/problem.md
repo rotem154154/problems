@@ -23,7 +23,7 @@ parameters:
   - name: "shape"
     type: "size_t"
     pointer: "true"
-    constant: "true"
+    const: "true"
 
   - name: "ndim"
     type: "size_t"
@@ -53,3 +53,4 @@ where $d$ is the dimension to reduce over, $n$ is the number of dimensions, and 
 - The reduction should maintain numerical stability by using appropriate accumulation techniques
 - The output tensor preserves the dimensionality of the input tensor with the reduced dimension having size 1
 - This problem computes the arithmetic mean (average) of elements along the specified dimension
+- This problem is adapted from [KernelBench](https://github.com/ScalingIntelligence/KernelBench/blob/main/KernelBench/level1/48_Mean_reduction_over_a_dimension.py)

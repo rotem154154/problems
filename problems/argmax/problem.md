@@ -23,7 +23,7 @@ parameters:
   - name: "shape"
     type: "int"
     pointer: "true"
-    constant: "true"
+    const: "true"
 
   - name: "ndim"
     type: "int"

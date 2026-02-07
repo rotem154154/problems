@@ -23,7 +23,7 @@ parameters:
   - name: "shape"
     type: "size_t"
     pointer: "true"
-    constant: "true"
+    const: "true"
 
   - name: "ndim"
     type: "size_t"

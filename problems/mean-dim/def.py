@@ -62,7 +62,7 @@ class mean_dim(Problem):
             })
         return test_cases
 
-    def generate_sample(self, dtype: torch.dtype = torch.float32) -> List[Dict[str, Any]]:
+    def generate_sample(self, dtype: torch.dtype = torch.float32) -> Dict[str, Any]:
         """
         Generate a single sample test case for debugging or interactive runs.
 
