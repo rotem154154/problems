@@ -1,0 +1,22 @@
+import torch
+
+def solution(input, kernel, output, batch_size, in_channels, out_channels,
+            depth, height, width, kernel_d, kernel_h, kernel_w,
+            stride_d, stride_h, stride_w, padding_d, padding_h, padding_w,
+            output_padding_d, output_padding_h, output_padding_w, sum_weight):
+    out = torch.nn.functional.conv_transpose3d(
+        input,
+        kernel,
+        bias=None,
+        stride=(stride_d, stride_h, stride_w),
+        padding=(padding_d, padding_h, padding_w),
+        output_padding=(output_padding_d, output_padding_h, output_padding_w),
+        dilation=1,
+        groups=1,
+    )
+    out = out + sum_weight
+    out = out.permute(0, 2, 3, 4, 1)
+    out = torch.nn.functional.layer_norm(out, (out.shape[-1],))
+    out = out.permute(0, 4, 1, 2, 3)
+    out = torch.nn.functional.avg_pool3d(out, kernel_size=(2, 2, 2))
+    output[:] = torch.nn.functional.gelu(out)

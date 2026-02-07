@@ -1,0 +1,19 @@
+import torch
+
+def solution(input, kernel, conv_bias, output, scale, maxpool_kernel, batch_size, in_channels, out_channels,
+            depth, height, width, kernel_d, kernel_h, kernel_w, stride_d, stride_h, stride_w,
+            padding_d, padding_h, padding_w):
+    out = torch.nn.functional.conv_transpose3d(
+        input,
+        kernel,
+        bias=conv_bias,
+        stride=(stride_d, stride_h, stride_w),
+        padding=(padding_d, padding_h, padding_w),
+        output_padding=0,
+        dilation=1,
+        groups=1,
+    )
+    out = out * scale
+    out = torch.nn.functional.max_pool3d(out, kernel_size=maxpool_kernel)
+    out = torch.nn.functional.adaptive_avg_pool3d(out, (1, 1, 1))
+    output[:] = torch.clamp(out, min=0.0, max=1.0)
