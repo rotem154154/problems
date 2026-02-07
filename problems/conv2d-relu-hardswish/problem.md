@@ -1,66 +1,75 @@
 ---
 slug: "conv2d-relu-hardswish"
-title: "2D Convolution with ReLU and HardSwish"
+title: "Conv2D ReLU HardSwish"
 difficulty: "MEDIUM"
-author: "sarthak"
-tags: ["convolution", "activation-function", "fused"]
+author: "rotem"
+tags: ["convolution", "activation"]
 parameters:
-  - name: "image"
+  - name: "input"
     type: "[VAR]"
     pointer: "true"
     const: "true"
-  
+
   - name: "kernel"
     type: "[VAR]"
     pointer: "true"
     const: "true"
 
-  - name: "output" 
+  - name: "bias"
+    type: "[VAR]"
+    pointer: "true"
+    const: "true"
+
+  - name: "output"
     type: "[VAR]"
     pointer: "true"
     const: "false"
 
-  - name: "H"
+  - name: "batch_size"
     type: "size_t"
     pointer: "false"
     constant: "false"
-    
-  - name: "W" 
+
+  - name: "in_channels"
     type: "size_t"
     pointer: "false"
     constant: "false"
-    
-  - name: "Kh"
+
+  - name: "out_channels"
     type: "size_t"
     pointer: "false"
     constant: "false"
-    
-  - name: "Kw"
+
+  - name: "height"
+    type: "size_t"
+    pointer: "false"
+    constant: "false"
+
+  - name: "width"
+    type: "size_t"
+    pointer: "false"
+    constant: "false"
+
+  - name: "kernel_h"
+    type: "size_t"
+    pointer: "false"
+    constant: "false"
+
+  - name: "kernel_w"
     type: "size_t"
     pointer: "false"
     constant: "false"
 ---
 
-Perform a 2D convolution followed by ReLU activation followed by HardSwish activation:
-
-1. **2D Convolution**: 
-   $$C[i][j] = \sum_{u=0}^{K_h-1} \sum_{v=0}^{K_w-1} I\left[i+u-\frac{K_h-1}{2}\right]\left[j+v-\frac{K_w-1}{2}\right] \cdot K[u][v]$$
-
-2. **ReLU Activation**:
-   $$R[i][j] = \max(0, C[i][j])$$
-
-3. **HardSwish Activation**:
-   $$O[i][j] = R[i][j] \cdot \frac{\text{ReLU6}(R[i][j] + 3)}{6}$$
-
-where $\text{ReLU6}(x) = \min(6, \max(0, x))$.
+Perform Conv2D, ReLU, and HardSwish.
 
 ## Input
-- `image` of size $H \times W$
-- `kernel` of size $K_h \times K_w$ (both dimensions must be odd)
+- Tensor `input` of shape $(B, C_{in}, H, W)$
+- Tensor `kernel` of shape $(C_{out}, C_{in}, K_h, K_w)$
+- Tensor `bias` of shape $(C_{out})$
 
 ## Output
-- `output` of size $H \times W$
+- Tensor `output` after HardSwish
 
-## Notes:
-- Use zero padding at the boundaries where the kernel extends beyond the input image
-- Both kernel height $K_h$ and kernel width $K_w$ will be odd integers
+## Notes
+- This problem is adapted from [KernelBench](https://github.com/ScalingIntelligence/KernelBench/blob/main/KernelBench/level2/57_Conv2d_ReLU_HardSwish.py)

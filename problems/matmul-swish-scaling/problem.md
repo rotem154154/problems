@@ -1,66 +1,60 @@
 ---
 slug: "matmul-swish-scaling"
-title: "Matrix Multiplication with Swish and Scaling"
+title: "Matmul Swish Scaling"
 difficulty: "MEDIUM"
-author: "sarthak"
-tags: ["matmul", "activation-function", "fused"]
+author: "rotem"
+tags: ["matmul", "activation"]
 parameters:
-  - name: "A"
+  - name: "input"
     type: "[VAR]"
     pointer: "true"
     const: "true"
-  
-  - name: "B"
-    type: "[VAR]"
-    pointer: "true"
-    const: "true"
-  
-  - name: "scale"
-    type: "float"
-    pointer: "false"
-    constant: "false"
 
-  - name: "output" 
+  - name: "weight"
+    type: "[VAR]"
+    pointer: "true"
+    const: "true"
+
+  - name: "bias"
+    type: "[VAR]"
+    pointer: "true"
+    const: "true"
+
+  - name: "output"
     type: "[VAR]"
     pointer: "true"
     const: "false"
 
-  - name: "M"
+  - name: "scaling_factor"
+    type: "double"
+    pointer: "false"
+    constant: "false"
+
+  - name: "batch_size"
     type: "size_t"
     pointer: "false"
     constant: "false"
-    
-  - name: "N" 
+
+  - name: "in_features"
     type: "size_t"
     pointer: "false"
     constant: "false"
-    
-  - name: "K"
+
+  - name: "out_features"
     type: "size_t"
     pointer: "false"
     constant: "false"
 ---
 
-Perform a matrix multiplication followed by Swish activation followed by scaling:
-
-$$
-O[i][j] = \text{scale} \times \text{swish}\left(\sum_{k=0}^{K-1} A[i][k] \cdot B[k][j]\right)
-$$
-
-where $\text{swish}(x) = x \cdot \sigma(x)$ and $\sigma(x) = \frac{1}{1 + e^{-x}}$ is the sigmoid function.
-
-This operation consists of three steps:
-1. Matrix multiplication: $C[i][j] = \sum_{k=0}^{K-1} A[i][k] \cdot B[k][j]$
-2. Swish activation: $S[i][j] = C[i][j] \cdot \sigma(C[i][j])$
-3. Scaling: $O[i][j] = \text{scale} \times S[i][j]$
+Perform linear projection, Swish activation, and scaling.
 
 ## Input
-- Matrix $A$ of size $M \times K$
-- Matrix $B$ of size $K \times N$
-- Scaling factor $\text{scale}$
+- Tensor `input` of shape $(B, F_{in})$
+- Matrix `weight` of shape $(F_{out}, F_{in})$
+- Vector `bias` of shape $(F_{out})$
 
 ## Output
-- Matrix $O$ of size $M \times N$
+- Tensor `output` after scaling
 
-## Notes:
-- All matrices $A$, $B$, and $O$ are stored in row-major order
+## Notes
+- This problem is adapted from [KernelBench](https://github.com/ScalingIntelligence/KernelBench/blob/main/KernelBench/level2/59_Matmul_Swish_Scaling.py)
